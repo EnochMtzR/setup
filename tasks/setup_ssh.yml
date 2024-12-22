@@ -1,0 +1,70 @@
+- name: Install SSH Keys and Configure
+  become: no
+  block:
+    - name: Create SSH directory
+      file:
+        path: "{{ ansible_env.HOME }}/.ssh"
+        state: directory
+        mode: 0700
+
+    - name: Deploy SSH private key
+      block:
+        - name: Read SSH private key
+          slurp:
+            src: "{{ item }}"
+          register: ssh_key
+          with_items:
+            - "ssh/azure"
+            - "ssh/github"
+            - "ssh/softinc.org"
+
+        - name: Write SSH private key
+          copy:
+            content: "{{ item.content | b64decode }}"
+            dest: "{{ ansible_env.HOME }}/.ssh/{{ item.source | basename }}"
+            mode: 0600
+          with_items: "{{ ssh_key.results }}"
+
+
+    - name: Deploy SSH public key
+      block:
+        - name: Read SSH public key
+          slurp:
+            src: "{{ item }}"
+          register: ssh_pub_key
+          with_items:
+            - "ssh/azure.pub"
+            - "ssh/github.pub"
+            - "ssh/softinc.org.pub"
+
+        - name: Write SSH public key
+          copy:
+            content: "{{ item.content | b64decode }}"
+            dest: "{{ ansible_env.HOME }}/.ssh/{{ item.source | basename }}"
+            mode: 0600
+          with_items: "{{ ssh_pub_key.results }}"
+
+    - name: Start ssh-agent
+      shell: eval $(ssh-agent -s)
+      environment:
+        SSH_AUTH_SOCK: "{{ lookup('env', 'SSH_AUTH_SOCK') }}"
+      register: ssh_agent_output
+      changed_when: false
+
+    - name: Add SSH keys to ssh-agent
+      become: no
+      shell: ssh-add {{ ansible_env.HOME }}/.ssh/{{ item | basename }}
+      with_items:
+        - "github"
+
+    - name: Configure Git
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.ssh/config"
+        line: |
+          Host github.com
+            HostName github.com
+            IdentityFile ~/.ssh/github
+            User git
+        create: yes
+        mode: 0600
+

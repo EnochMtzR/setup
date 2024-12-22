@@ -1,0 +1,21 @@
+- name: Setup new personal linux machine
+  hosts: localhost
+  tasks:
+    - name: Update apt task
+      import_tasks: tasks/update_apt.yml
+
+    - name: Add repositories task
+      import_tasks: tasks/add_repos.yml
+
+    - name: Install mono font task
+      import_tasks: tasks/install_mono_font.yml
+
+    - name: Install packages task
+      import_tasks: tasks/install_packages.yml
+
+    - name: Setup SSH
+      import_tasks: tasks/setup_ssh.yml
+
+    - name: Download and setup dotfiles task
+      import_tasks: tasks/download_and_setup_dotfiles.yml
+

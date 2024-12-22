@@ -1,0 +1,22 @@
+- name: Install required packages
+  become: yes
+  package:
+    name:
+      - stow
+      - git
+      - curl
+      - build-essential
+      - zsh
+      - neovim
+      - tmux
+      - ssh-askpass
+      - fzf
+
+- name: Install Chrome
+  import_tasks: install_chrome.yml
+
+- name: Install Oh My Zsh
+  import_tasks: install_oh_my_zsh.yml
+
+- name: Install Tmux Plugin Manager
+  import_tasks: setup_tmux.yml

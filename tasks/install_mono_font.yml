@@ -1,0 +1,28 @@
+- name: Add mono font
+  become: yes
+  block:
+    - name: Download mono font
+      get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip
+        dest: /tmp/JetBrainsMono.zip
+        mode: 0644
+
+    - name: Create mono font directory
+      file:
+        path: /usr/share/fonts/truetype/JetBrainsMono
+        state: directory
+        mode: 0755
+
+    - name: Unzip mono font
+      unarchive:
+        src: /tmp/JetBrainsMono.zip
+        dest: /usr/share/fonts/truetype/JetBrainsMono
+        remote_src: yes
+
+    - name: Refresh font cache
+      command: fc-cache -f -v
+
+    - name: Remove mono font zip file
+      file:
+        path: /tmp/JetBrainsMono.zip
+        state: absent
