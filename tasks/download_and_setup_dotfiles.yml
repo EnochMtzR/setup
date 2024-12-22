@@ -1,0 +1,20 @@
+- name:
+  become: no
+  block:
+    - name: Download dotfiles
+      git:
+        repo: git@github.com:EnochMtzR/dotfiles.git
+        dest: "{{ ansible_env.HOME }}/dotfiles"
+        update: yes
+        accept_hostkey: yes
+      
+    - name: Apply dotfiles with stow --adopt
+      command: stow --adopt --dir={{ ansible_env.HOME }}/dotfiles --target={{ ansible_env.HOME }} .
+      args:
+        chdir: "{{ ansible_env.HOME }}/dotfiles"
+        creates: "{{ ansible_env.HOME }}/notes/"
+
+    - name: Reset dotfiles git repo to clean state
+      command: git reset --hard
+      args:
+        chdir: "{{ ansible_env.HOME }}/dotfiles"

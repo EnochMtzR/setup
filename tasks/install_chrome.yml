@@ -1,0 +1,28 @@
+- name: Install Chrome
+  become: yes
+  block:
+    - name: Check chrome installed
+      command: which google-chrome
+      register: chrome_installed
+      ignore_errors: yes
+
+    - name: Download google-chrome
+      get_url:
+        url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        dest: /tmp/google-chrome-stable_current_amd64.deb
+        mode: 0644
+      when: chrome_installed.rc != 0
+
+    - name: Install google-chrome
+      apt:
+        deb: /tmp/google-chrome-stable_current_amd64.deb
+        state: present
+      when: chrome_installed.rc != 0
+
+    - name: Remove google-chrome deb file
+      file:
+        path: /tmp/google-chrome-stable_current_amd64.deb
+        state: absent
+      when: chrome_installed.rc != 0
+
+  when: ansible_os_family == "Debian"

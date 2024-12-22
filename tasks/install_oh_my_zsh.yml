@@ -1,0 +1,40 @@
+- name: Install Oh My Zsh
+  block:
+    - name: Download Oh My Zsh install script
+      become: no
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/install_oh_my_zsh.sh
+        mode: 0755
+
+    - name: Run Oh My Zsh install script for current user
+      command: /tmp/install_oh_my_zsh.sh
+      become: no
+      args:
+        creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+
+    - name: Remove Oh My Zsh install script
+      file:
+        path: /tmp/install_oh_my_zsh.sh
+        state: absent
+
+    - name: Change default shell to zsh
+      become: yes
+      user:
+        name: "{{ ansible_env.USER }}"
+        shell: /bin/zsh
+
+    - name: install zsh-autosuggestions
+      git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+        update: yes
+      become: no
+
+    - name: install zsh-syntax-highlighting
+      git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+        update: yes
+      become: no
+

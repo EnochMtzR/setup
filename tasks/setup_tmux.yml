@@ -1,0 +1,14 @@
+- name: Setup tmux
+  block:
+    - name: Create plugin directory
+      file:
+        path: "{{ ansible_env.HOME }}/.tmux/plugins"
+        state: directory
+        mode: 0755
+    
+    - name: Clone tmux plugin manager
+      git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+        update: yes
+      become: false
