@@ -1,5 +1,7 @@
 - name: Add Neovim repository
   become: yes
+  tags:
+    - install-apps
   apt_repository:
     repo: ppa:neovim-ppa/unstable
     state: present

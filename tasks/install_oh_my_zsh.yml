@@ -1,4 +1,6 @@
 - name: Install Oh My Zsh
+  tags:
+    - configure
   block:
     - name: Download Oh My Zsh install script
       become: no

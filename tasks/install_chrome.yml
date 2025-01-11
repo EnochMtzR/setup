@@ -1,5 +1,8 @@
 - name: Install Chrome
   become: yes
+  tags:
+    - install-apps
+    - chrome
   block:
     - name: Check chrome installed
       command: which google-chrome

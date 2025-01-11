@@ -1,5 +1,8 @@
 - name: Add mono font
   become: yes
+  tags:
+    - configure
+    - fonts
   block:
     - name: Download mono font
       get_url:

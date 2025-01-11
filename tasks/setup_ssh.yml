@@ -1,5 +1,7 @@
 - name: Install SSH Keys and Configure
   become: no
+  tags:
+    - configure
   block:
     - name: Create SSH directory
       file:

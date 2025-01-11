@@ -1,5 +1,8 @@
 - name:
   become: no
+  tags:
+    - configure
+    - dotfiles
   block:
     - name: Download dotfiles
       git:

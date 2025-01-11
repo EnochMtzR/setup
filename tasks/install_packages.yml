@@ -1,5 +1,8 @@
 - name: Install required packages
   become: yes
+  tags:
+    - install-apps
+    - apt
   package:
     name:
       - stow
@@ -11,6 +14,11 @@
       - tmux
       - ssh-askpass
       - fzf
+      - neofetch
+      - htop
+      - btop
+      - ripgrep
+      - xclip
 
 - name: Install Chrome
   import_tasks: install_chrome.yml
@@ -20,3 +28,6 @@
 
 - name: Install Tmux Plugin Manager
   import_tasks: setup_tmux.yml
+
+- name: Install Node
+  import_tasks: install_node.yml

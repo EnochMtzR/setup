@@ -1,4 +1,6 @@
 - name: Setup tmux
+  tags:
+    - configure
   block:
     - name: Create plugin directory
       file:

@@ -1,0 +1,32 @@
+- name: Install Node
+  become: no
+  tags:
+    - install-apps
+    - node-dev
+  block:
+    - name: Check if NVM is already installed
+      tags:
+        - nvm
+      stat:
+        path: "{{ ansible_env.HOME }}/.nvm"
+      register: nvm_installed
+
+    - name: Install NVM using the official script
+      tags:
+        - nvm
+      shell: |
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+      args:
+        executable: /bin/bash
+      when: not nvm_installed.stat.exists
+
+    - name: Install Node.js using NVM
+      tags:
+        - node
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install --lts
+      args:
+        executable: /bin/bash
+
