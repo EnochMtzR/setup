@@ -1,0 +1,28 @@
+- name: Install Jetbrains Toolbox
+  become: no
+  tags:
+    - install-apps
+    - jetbrains
+  block:
+    - name: Download Jetbrains Toolbox
+      get_url:
+        url: "{{ jetbrains_toolbox_url }}"
+        dest: /tmp/jetbrains-toolbox.tar.gz
+        mode: 0644
+
+    - name: Extract Jetbrains Toolbox
+      become: yes
+      unarchive:
+        src: /tmp/jetbrains-toolbox.tar.gz
+        dest: /opt
+
+    - name: Rename extracted folder to jetbrains-toolbox
+      become: yes
+      shell:
+        cmd: mv "/opt/$(ls "/opt" | grep "jetbrains-toolbox" | head -n 1)" /opt/jetbrains-toolbox
+
+    - name: Remove Jetbrains Toolbox tar file
+      file:
+        path: /tmp/jetbrains-toolbox.tar.gz
+        state: absent
+

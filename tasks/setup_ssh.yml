@@ -67,6 +67,10 @@
             HostName github.com
             IdentityFile ~/.ssh/github
             User git
+          Host softinc.org
+            HostName github.com
+            IdentityFile ~/.ssh/softinc.org
+            User git
         create: yes
         mode: 0600
 

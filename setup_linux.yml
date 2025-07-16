@@ -1,5 +1,7 @@
 - name: Setup new personal linux machine
   hosts: localhost
+  vars_files:
+    - vars.yml
   tasks:
     - name: Update apt task
       import_tasks: tasks/update_apt.yml
